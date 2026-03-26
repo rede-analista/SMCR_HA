@@ -12,6 +12,8 @@ arch:
 startup: application
 boot: auto
 host_network: true
+ports:
+  8765/tcp: 8765
 ports_description:
   8765/tcp: Interface web do SMCR Cloud
 map:

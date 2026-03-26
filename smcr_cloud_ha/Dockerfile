@@ -1,4 +1,4 @@
-ARG BUILD_FROM=php:8.2-apache
+ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 # Instala dependências do sistema
