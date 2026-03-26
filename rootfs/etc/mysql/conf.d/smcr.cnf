@@ -1,0 +1,15 @@
+[mysqld]
+datadir         = /data/mariadb
+socket          = /run/mysqld/mysqld.sock
+pid-file        = /run/mysqld/mysqld.pid
+bind-address    = 127.0.0.1
+skip-networking = OFF
+
+# Desabilita acesso externo (apenas localhost)
+# bind-address 127.0.0.1 já garante isso
+
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_unicode_ci
+
+[client]
+socket = /run/mysqld/mysqld.sock

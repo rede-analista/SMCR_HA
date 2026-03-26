@@ -1,0 +1,30 @@
+name: SMCR Cloud
+version: "1.0.0"
+slug: smcr_cloud
+description: Gerenciamento centralizado de dispositivos SMCR (ESP32) com suporte a MQTT e HA Discovery.
+url: https://github.com/gczanatta/SMCR_CLOUD
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - armhf
+  - i386
+startup: application
+boot: auto
+host_network: true
+ports_description:
+  8765/tcp: Interface web do SMCR Cloud
+map:
+  - data:rw
+options:
+  port: 8765
+  db_password: "smcr_secret_2024"
+  admin_user: "admin"
+  admin_password: "admin123"
+schema:
+  port: port
+  db_password: str
+  admin_user: str
+  admin_password: str
+panel_icon: mdi:router-wireless
+panel_title: SMCR Cloud

@@ -1,0 +1,6 @@
+{
+  "port": 8765,
+  "db_password": "smcr_secret_2024",
+  "admin_user": "admin",
+  "admin_password": "admin123"
+}
