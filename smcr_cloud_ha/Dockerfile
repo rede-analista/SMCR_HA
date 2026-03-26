@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     php8.2-zip \
     libapache2-mod-php8.2 \
     mariadb-server \
-    supervisor \
     jq \
     unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -18,24 +17,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Habilita módulos Apache
 RUN a2enmod rewrite headers php8.2
 
-# Desabilita o site padrão do Apache (será substituído pelo smcr.conf)
+# Desabilita o site padrão do Apache
 RUN a2dissite 000-default || true
 
-# Copia arquivos do rootfs (configurações Apache, supervisord, MySQL)
+# Copia arquivos do rootfs (Apache, MySQL, cont-init.d, services.d)
 COPY rootfs/ /
 
-# Habilita o site SMCR
-RUN a2ensite smcr
+# Habilita o site SMCR e torna scripts executáveis
+RUN a2ensite smcr \
+    && chmod a+x /etc/cont-init.d/*.sh \
+    && chmod a+x /etc/services.d/mariadb/run \
+    && chmod a+x /etc/services.d/apache2/run
 
 # Cria diretório runtime para o MariaDB
 RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
 
-# Copia a aplicação PHP do SMCR_CLOUD
+# Copia a aplicação PHP
 COPY app/ /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
-
-# Copia e habilita o script de inicialização
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
-
-CMD ["/run.sh"]

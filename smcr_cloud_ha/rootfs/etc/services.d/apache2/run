@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+
+# Aguarda MariaDB ficar disponível
+for i in $(seq 1 30); do
+    if mysqladmin ping --socket=/run/mysqld/mysqld.sock --silent 2>/dev/null; then
+        break
+    fi
+    sleep 1
+done
+
+exec /usr/sbin/apache2ctl -D FOREGROUND 2>&1
