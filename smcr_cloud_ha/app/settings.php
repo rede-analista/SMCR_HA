@@ -90,6 +90,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /settings.php');
         exit;
     }
+
+    if ($action === 'reset_database') {
+        $confirm = $_POST['confirm_reset'] ?? '';
+        if ($confirm !== 'RESETAR') {
+            set_flash('danger', 'Texto de confirmação incorreto. Digite exatamente: RESETAR');
+            header('Location: /settings.php');
+            exit;
+        }
+
+        try {
+            $tables = ['device_actions','device_pins','device_intermod','device_config','device_status','devices','settings','users'];
+            $db->exec('SET FOREIGN_KEY_CHECKS=0');
+            foreach ($tables as $table) {
+                $db->exec("DROP TABLE IF EXISTS `{$table}`");
+            }
+            $db->exec('SET FOREIGN_KEY_CHECKS=1');
+
+            $schema = file_get_contents(__DIR__ . '/install/schema.sql');
+            $schema = preg_replace('/^\s*CREATE DATABASE\b.*?;\s*/im', '', $schema);
+            $schema = preg_replace('/^\s*USE\b.*?;\s*/im', '', $schema);
+            foreach (array_filter(array_map('trim', explode(';', $schema))) as $sql) {
+                $db->exec($sql);
+            }
+
+            $admin_user     = trim((string)shell_exec("jq -r '.admin_user // \"admin\"' /data/options.json"));
+            $admin_password = trim((string)shell_exec("jq -r '.admin_password // \"admin123\"' /data/options.json"));
+            $hash = password_hash($admin_password, PASSWORD_BCRYPT);
+            $stmt = $db->prepare('INSERT INTO users (username, password_hash) VALUES (?, ?) ON DUPLICATE KEY UPDATE password_hash = ?, username = ?');
+            $stmt->execute([$admin_user, $hash, $hash, $admin_user]);
+
+            session_destroy();
+            header('Location: /login.php');
+            exit;
+        } catch (Exception $e) {
+            set_flash('danger', 'Erro ao resetar banco: ' . $e->getMessage());
+            header('Location: /settings.php');
+            exit;
+        }
+    }
 }
 
 // Load data
@@ -237,6 +276,35 @@ include __DIR__ . '/includes/header.php';
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger zone -->
+    <div class="col-12">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                <h5 class="mb-0">Zona de Perigo</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-danger fw-semibold mb-1">Resetar banco de dados</p>
+                <p class="text-muted small mb-3">
+                    Remove <strong>todos os dispositivos, configurações e usuários</strong> e recria o banco do zero.
+                    O add-on continuará rodando e você será desconectado. Esta ação é irreversível.
+                </p>
+                <form method="POST" onsubmit="return document.getElementById('confirm_reset_input').value === 'RESETAR' || (alert('Digite exatamente: RESETAR'), false)">
+                    <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
+                    <input type="hidden" name="action" value="reset_database">
+                    <div class="input-group" style="max-width:400px">
+                        <input type="text" id="confirm_reset_input" name="confirm_reset"
+                               class="form-control" placeholder="Digite RESETAR para confirmar" autocomplete="off">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash3-fill me-1"></i>Resetar Banco
+                        </button>
+                    </div>
+                    <div class="form-text text-muted mt-1">Digite exatamente <code>RESETAR</code> para habilitar.</div>
+                </form>
             </div>
         </div>
     </div>
