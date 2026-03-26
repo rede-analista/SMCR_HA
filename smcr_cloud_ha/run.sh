@@ -50,39 +50,44 @@ if [ ! -d "${DATADIR}/mysql" ]; then
     mkdir -p "${DATADIR}"
     chown -R mysql:mysql "${DATADIR}"
 
-    mysql_install_db --user=mysql --datadir="${DATADIR}" --skip-test-db \
-        --auth-root-authentication-method=normal > /dev/null 2>&1
+    mysql_install_db --user=mysql --datadir="${DATADIR}" --skip-test-db > /dev/null 2>&1
 
-    # Inicia MariaDB temporariamente (root com senha vazia via normal auth)
-    mysqld_safe --datadir="${DATADIR}" --skip-networking &
-    MYSQL_PID=$!
+    ADMIN_HASH=$(php -r "echo password_hash('${ADMIN_PASSWORD}', PASSWORD_BCRYPT);")
 
-    # Aguarda MariaDB ficar disponível
-    for i in $(seq 1 30); do
-        if mysqladmin -u root ping --socket=/run/mysqld/mysqld.sock --silent 2>/dev/null; then
-            break
-        fi
-        sleep 1
-    done
-
-    # Cria banco, usuário e aplica schema
-    mysql -u root --socket=/run/mysqld/mysqld.sock <<SQL
-FLUSH PRIVILEGES;
+    # Cria arquivo de inicialização executado pelo mysqld antes de aceitar conexões
+    cat > /tmp/smcr_init.sql <<INITEOF
 CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_PASS}';
 FLUSH PRIVILEGES;
-SQL
+INITEOF
 
-    mysql -u root --socket=/run/mysqld/mysqld.sock "${DB_NAME}" < /var/www/html/install/schema.sql
+    # Inicia MariaDB com --init-file (executa SQL com privilégios internos, sem auth)
+    mysqld --init-file=/tmp/smcr_init.sql --user=mysql --datadir="${DATADIR}" \
+        --socket=/run/mysqld/mysqld.sock --pid-file=/run/mysqld/mysqld.pid \
+        --skip-networking 2>/dev/null &
+    MYSQL_PID=$!
 
-    # Atualiza senha do admin conforme configuração
-    ADMIN_HASH=$(php -r "echo password_hash('${ADMIN_PASSWORD}', PASSWORD_BCRYPT);")
-    mysql -u root --socket=/run/mysqld/mysqld.sock "${DB_NAME}" <<SQL
+    # Aguarda MariaDB ficar disponível (usando a senha definida no init-file)
+    for i in $(seq 1 30); do
+        if mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock \
+                -e "SELECT 1" 2>/dev/null; then
+            break
+        fi
+        sleep 1
+    done
+
+    # Aplica schema e insere admin
+    mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock "${DB_NAME}" \
+        < /var/www/html/install/schema.sql
+
+    mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock "${DB_NAME}" <<SQL
 INSERT INTO users (username, password_hash) VALUES ('${ADMIN_USER}', '${ADMIN_HASH}')
 ON DUPLICATE KEY UPDATE password_hash = '${ADMIN_HASH}', username = '${ADMIN_USER}';
 SQL
+
+    rm -f /tmp/smcr_init.sql
 
     # Para o MariaDB temporário
     kill "${MYSQL_PID}"
