@@ -50,10 +50,11 @@ if [ ! -d "${DATADIR}/mysql" ]; then
     mkdir -p "${DATADIR}"
     chown -R mysql:mysql "${DATADIR}"
 
-    mysql_install_db --user=mysql --datadir="${DATADIR}" --skip-test-db > /dev/null 2>&1
+    mysql_install_db --user=mysql --datadir="${DATADIR}" --skip-test-db \
+        --auth-root-authentication-method=normal > /dev/null 2>&1
 
-    # Inicia MariaDB temporariamente sem autenticação para configuração inicial
-    mysqld_safe --datadir="${DATADIR}" --skip-networking --skip-grant-tables &
+    # Inicia MariaDB temporariamente (root com senha vazia via normal auth)
+    mysqld_safe --datadir="${DATADIR}" --skip-networking &
     MYSQL_PID=$!
 
     # Aguarda MariaDB ficar disponível
