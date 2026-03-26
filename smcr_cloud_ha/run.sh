@@ -52,20 +52,21 @@ if [ ! -d "${DATADIR}/mysql" ]; then
 
     mysql_install_db --user=mysql --datadir="${DATADIR}" --skip-test-db > /dev/null 2>&1
 
-    # Inicia MariaDB temporariamente para configuração inicial
-    mysqld_safe --datadir="${DATADIR}" --skip-networking &
+    # Inicia MariaDB temporariamente sem autenticação para configuração inicial
+    mysqld_safe --datadir="${DATADIR}" --skip-networking --skip-grant-tables &
     MYSQL_PID=$!
 
     # Aguarda MariaDB ficar disponível
     for i in $(seq 1 30); do
-        if mysqladmin ping --socket=/run/mysqld/mysqld.sock --silent 2>/dev/null; then
+        if mysqladmin -u root ping --socket=/run/mysqld/mysqld.sock --silent 2>/dev/null; then
             break
         fi
         sleep 1
     done
 
     # Cria banco, usuário e aplica schema
-    mysql --socket=/run/mysqld/mysqld.sock <<SQL
+    mysql -u root --socket=/run/mysqld/mysqld.sock <<SQL
+FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS ${DB_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';
@@ -73,11 +74,11 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_PASS}';
 FLUSH PRIVILEGES;
 SQL
 
-    mysql --socket=/run/mysqld/mysqld.sock "${DB_NAME}" < /var/www/html/install/schema.sql
+    mysql -u root --socket=/run/mysqld/mysqld.sock "${DB_NAME}" < /var/www/html/install/schema.sql
 
     # Atualiza senha do admin conforme configuração
     ADMIN_HASH=$(php -r "echo password_hash('${ADMIN_PASSWORD}', PASSWORD_BCRYPT);")
-    mysql --socket=/run/mysqld/mysqld.sock "${DB_NAME}" <<SQL
+    mysql -u root --socket=/run/mysqld/mysqld.sock "${DB_NAME}" <<SQL
 INSERT INTO users (username, password_hash) VALUES ('${ADMIN_USER}', '${ADMIN_HASH}')
 ON DUPLICATE KEY UPDATE password_hash = '${ADMIN_HASH}', username = '${ADMIN_USER}';
 SQL
