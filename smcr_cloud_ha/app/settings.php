@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt  = $db->prepare("UPDATE settings SET value = ? WHERE `key` = 'register_token'");
         $stmt->execute([$token]);
         set_flash('success', 'Token de auto-registro regenerado com sucesso.');
-        header('Location: /settings.php');
+        header('Location: ' . BASE . '/settings.php');
         exit;
     }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$hash, $_SESSION['user_id']]);
             set_flash('success', 'Senha alterada com sucesso.');
         }
-        header('Location: /settings.php');
+        header('Location: ' . BASE . '/settings.php');
         exit;
     }
 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 set_flash('success', "Usuário \"{$username}\" criado com sucesso.");
             }
         }
-        header('Location: /settings.php');
+        header('Location: ' . BASE . '/settings.php');
         exit;
     }
 
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$uid]);
             set_flash('success', 'Usuário excluído.');
         }
-        header('Location: /settings.php');
+        header('Location: ' . BASE . '/settings.php');
         exit;
     }
 
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $confirm = $_POST['confirm_reset'] ?? '';
         if ($confirm !== 'RESETAR') {
             set_flash('danger', 'Texto de confirmação incorreto. Digite exatamente: RESETAR');
-            header('Location: /settings.php');
+            header('Location: ' . BASE . '/settings.php');
             exit;
         }
 
@@ -121,11 +121,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$admin_user, $hash, $hash, $admin_user]);
 
             session_destroy();
-            header('Location: /login.php');
+            header('Location: ' . BASE . '/login.php');
             exit;
         } catch (Exception $e) {
             set_flash('danger', 'Erro ao resetar banco: ' . $e->getMessage());
-            header('Location: /settings.php');
+            header('Location: ' . BASE . '/settings.php');
             exit;
         }
     }

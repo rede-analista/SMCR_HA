@@ -26,9 +26,24 @@ if ($device_id > 0 && $device === null) {
 $page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-base="<?= BASE ?>">
 <head>
     <meta charset="UTF-8">
+    <script>
+    // Corrige links absolutos para HA Ingress antes do paint
+    (function(){
+        var base = document.documentElement.dataset.base || '';
+        if (!base) return;
+        document.addEventListener('DOMContentLoaded', function(){
+            document.querySelectorAll('a[href^="/"]').forEach(function(a){
+                a.href = base + a.getAttribute('href');
+            });
+            document.querySelectorAll('form[action^="/"]').forEach(function(f){
+                f.action = base + f.getAttribute('action');
+            });
+        });
+    })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= h($page_title) ?> - SMCR Cloud</title>
     <link rel="icon" href="/data/favicon.ico" type="image/x-icon">

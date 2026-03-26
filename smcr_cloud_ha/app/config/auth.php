@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/db.php';
 
+// Base path para suporte a HA Ingress (vazio quando acesso direto)
+define('BASE', rtrim($_SERVER['HTTP_X_INGRESS_PATH'] ?? '', '/'));
+
 function session_init(): void {
     if (session_status() === PHP_SESSION_NONE) {
         session_name('SMCR_SESSION');
@@ -15,7 +18,7 @@ function is_logged_in(): bool {
 
 function require_login(): void {
     if (!is_logged_in()) {
-        header('Location: /login.php');
+        header('Location: ' . BASE . '/login.php');
         exit;
     }
 }

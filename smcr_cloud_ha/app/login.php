@@ -3,7 +3,7 @@ require_once __DIR__ . '/config/auth.php';
 session_init();
 
 if (is_logged_in()) {
-    header('Location: /dashboard.php');
+    header('Location: ' . BASE . '/dashboard.php');
     exit;
 }
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '' || $password === '') {
         $error = 'Preencha o usuário e a senha.';
     } elseif (login($username, $password)) {
-        header('Location: /dashboard.php');
+        header('Location: ' . BASE . '/dashboard.php');
         exit;
     } else {
         $error = 'Usuário ou senha inválidos.';

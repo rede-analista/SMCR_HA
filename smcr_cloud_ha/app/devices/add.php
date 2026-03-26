@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->commit();
 
             set_flash('success', "Dispositivo \"$unique_id\" cadastrado com sucesso!");
-            header('Location: /devices/view.php?device_id=' . $device_id);
+            header('Location: ' . BASE . '/devices/view.php?device_id=' . $device_id);
             exit;
         } catch (Exception $e) {
             $db->rollBack();

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quick_register'])) {
             $stmt->execute([$device_id, $ip, $hostname]);
             $db->commit();
             set_flash('success', "Dispositivo \"{$name}\" cadastrado com sucesso!");
-            header('Location: /devices/view.php?device_id=' . $device_id);
+            header('Location: ' . BASE . '/devices/view.php?device_id=' . $device_id);
             exit;
         } else {
             set_flash('danger', "Dispositivo com ID \"{$unique_id}\" já está cadastrado.");

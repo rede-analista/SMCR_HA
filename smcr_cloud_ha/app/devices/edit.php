@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name, $device_id]);
 
     set_flash('success', 'Nome do dispositivo atualizado com sucesso.');
-    header('Location: /devices/view.php?device_id=' . $device_id);
+    header('Location: ' . BASE . '/devices/view.php?device_id=' . $device_id);
     exit;
 }
 
