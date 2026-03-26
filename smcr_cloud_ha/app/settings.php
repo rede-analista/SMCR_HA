@@ -283,7 +283,7 @@ include __DIR__ . '/includes/header.php';
     <!-- Danger zone -->
     <div class="col-12">
         <div class="card border-danger">
-            <div class="card-header bg-danger text-white d-flex align-items-center gap-2">
+            <div class="card-header text-white d-flex align-items-center gap-2" style="background:#dc3545!important">
                 <i class="bi bi-exclamation-triangle-fill fs-5"></i>
                 <h5 class="mb-0">Zona de Perigo</h5>
             </div>
