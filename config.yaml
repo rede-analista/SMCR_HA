@@ -1,8 +1,8 @@
-name: SMCR Cloud
+name: SMCR Cloud HA
 version: "1.0.0"
-slug: smcr_cloud
+slug: smcr_cloud_ha
 description: Gerenciamento centralizado de dispositivos SMCR (ESP32) com suporte a MQTT e HA Discovery.
-url: https://github.com/gczanatta/SMCR_CLOUD
+url: https://github.com/rede-analista/SMCR_HA
 arch:
   - amd64
   - aarch64
@@ -27,4 +27,4 @@ schema:
   admin_user: str
   admin_password: str
 panel_icon: mdi:router-wireless
-panel_title: SMCR Cloud
+panel_title: SMCR Cloud HA

@@ -26,15 +26,15 @@ rsync -av --delete \
 
 echo "==> Construindo imagem Docker..."
 docker build \
-    --tag "local/smcr_cloud:latest" \
+    --tag "local/smcr_cloud_ha:latest" \
     --build-arg BUILD_FROM="php:8.2-apache" \
     "${SCRIPT_DIR}"
 
 echo ""
-echo "==> Build concluído: local/smcr_cloud:latest"
+echo "==> Build concluído: local/smcr_cloud_ha:latest"
 echo ""
 echo "Para testar localmente (sem HA):"
 echo "  docker run --rm -it \\"
 echo "    -v \$(pwd)/test_data:/data \\"
 echo "    -p 8765:8765 \\"
-echo "    local/smcr_cloud:latest"
+echo "    local/smcr_cloud_ha:latest"
