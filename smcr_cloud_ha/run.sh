@@ -11,8 +11,16 @@ DB_HOST="localhost"
 DB_NAME="smcr_cloud"
 DB_USER="smcr"
 DATADIR="/data/mariadb"
+RESET=$(jq -r '.reset_on_start // false' /data/options.json)
 
 echo "[SMCR] Iniciando add-on SMCR Cloud na porta ${PORT}..."
+
+# ── Reset solicitado via configuração do add-on ──────────────────────────────
+if [ "${RESET}" = "true" ]; then
+    echo "[SMCR] reset_on_start=true: removendo banco de dados para reinicialização..."
+    rm -rf "${DATADIR}"
+    echo "[SMCR] Banco removido. Defina reset_on_start=false na configuração do add-on."
+fi
 
 # ── Configura Apache com a porta escolhida ───────────────────────────────────
 sed -i "s/__PORT__/${PORT}/g" /etc/apache2/sites-available/smcr.conf
