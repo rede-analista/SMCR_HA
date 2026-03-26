@@ -1,2 +1,0 @@
-#!/usr/bin/with-contenv bash
-exec mysqld_safe --datadir=/data/mariadb --user=mysql 2>&1
