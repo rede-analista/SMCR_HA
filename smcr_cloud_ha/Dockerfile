@@ -1,21 +1,22 @@
 ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
-# Instala dependências do sistema
+# Instala Apache, PHP 8.2 e dependências do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    apache2 \
+    php8.2 \
+    php8.2-mysql \
+    php8.2-gd \
+    php8.2-zip \
+    libapache2-mod-php8.2 \
     mariadb-server \
     supervisor \
     jq \
-    libpng-dev \
-    libzip-dev \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala extensões PHP necessárias
-RUN docker-php-ext-install pdo pdo_mysql mysqli
-
 # Habilita módulos Apache
-RUN a2enmod rewrite headers
+RUN a2enmod rewrite headers php8.2
 
 # Desabilita o site padrão do Apache (será substituído pelo smcr.conf)
 RUN a2dissite 000-default || true
