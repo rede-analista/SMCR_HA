@@ -33,6 +33,7 @@ $page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
     // Corrige links absolutos para HA Ingress antes do paint
     (function(){
         var base = document.documentElement.dataset.base || '';
+        console.log('[SMCR Ingress] BASE path:', base || '(empty - direct access)');
         if (!base) return;
         document.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll('a[href^="/"]').forEach(function(a){

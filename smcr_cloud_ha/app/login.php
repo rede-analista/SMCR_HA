@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <?php endif; ?>
 
-            <form method="POST" action="/login.php">
+            <form method="POST" action="<?= BASE ?>/login.php">
                 <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
                 <div class="mb-3">
