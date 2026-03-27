@@ -121,7 +121,7 @@ include __DIR__ . '/../includes/header.php';
     <span class="text-muted small"><?= h($device['name'] ?: $device['unique_id']) ?></span>
 </div>
 
-<form method="POST" action="/devices/config_geral.php?device_id=<?= $device_id ?>">
+<form method="POST" action="<?= BASE ?>/devices/config_geral.php?device_id=<?= $device_id ?>">
     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
     <div class="card">

@@ -253,6 +253,7 @@ include __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
+const BASE_PATH = document.documentElement.dataset.base || '';
 function toggleToken() {
     const input = document.getElementById('api_token');
     const eye = document.getElementById('token_eye');
@@ -278,7 +279,7 @@ function pullDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Importando...';
 
-    fetch('/api/sync_device.php', {
+    fetch(BASE_PATH + '/api/sync_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id }),
@@ -306,7 +307,7 @@ function pushDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enviando...';
 
-    fetch('/api/push_device.php', {
+    fetch(BASE_PATH + '/api/push_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, push_config: true }),

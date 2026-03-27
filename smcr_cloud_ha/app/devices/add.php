@@ -85,7 +85,7 @@ include __DIR__ . '/../includes/header.php';
                 </div>
                 <?php endif; ?>
 
-                <form method="POST" action="/devices/add.php">
+                <form method="POST" action="<?= BASE ?>/devices/add.php">
                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
                     <div class="mb-3">

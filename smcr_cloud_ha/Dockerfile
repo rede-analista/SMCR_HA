@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libzip-dev \
     unzip \
+    python3 \
+    python3-zeroconf \
     && rm -rf /var/lib/apt/lists/*
 
 # Instala extensões PHP necessárias

@@ -19,73 +19,39 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 /**
- * Executa avahi-browse e retorna dispositivos SMCR encontrados.
- * Filtra por TXT records: device_type=smcr ou device=SMCR
+ * Executa script Python com zeroconf para descobrir dispositivos SMCR via mDNS.
+ * Não requer avahi-daemon — usa multicast UDP direto.
  */
 function discover_via_mdns(): array {
-    // -t = termina após listar tudo, -r = resolve (mostra IP/porta/TXT), -p = formato parseável
-    $output = shell_exec('avahi-browse -t -r -p _http._tcp 2>/dev/null');
+    $script = __DIR__ . '/mdns_discover.py';
+    $output = shell_exec('python3 ' . escapeshellarg($script) . ' 2>/dev/null');
     if ($output === null || $output === '') {
         return [];
     }
 
-    $devices   = [];
-    $current   = null;
-
-    foreach (explode("\n", $output) as $line) {
-        $line = trim($line);
-        if ($line === '') continue;
-
-        $parts = str_getcsv($line, ';');
-        if (count($parts) < 2) continue;
-
-        $type = $parts[0]; // '+' = novo serviço, '=' = resolvido, '-' = removido
-
-        if ($type === '=') {
-            // Linha resolvida: =;<iface>;<proto>;<name>;<type>;<domain>;<hostname>;<addr>;<port>;<txt>
-            if (count($parts) < 10) continue;
-
-            $hostname = rtrim($parts[6], '.');
-            $ip       = $parts[7];
-            $port     = (int)$parts[8];
-            $txt_raw  = $parts[9];
-
-            // Verifica se tem TXT records indicando dispositivo SMCR
-            $is_smcr = false;
-            $version = '';
-            $txt_records = [];
-
-            // TXT vem como: "key=val" "key2=val2"
-            preg_match_all('/"([^"]*)"/', $txt_raw, $matches);
-            foreach ($matches[1] as $txt) {
-                $txt_records[] = $txt;
-                if (stripos($txt, 'device_type=smcr') !== false ||
-                    stripos($txt, 'device=SMCR')      !== false) {
-                    $is_smcr = true;
-                }
-                if (str_starts_with(strtolower($txt), 'version=')) {
-                    $version = substr($txt, 8);
-                }
-            }
-
-            if (!$is_smcr) continue;
-            if (!filter_var($ip, FILTER_VALIDATE_IP)) continue;
-
-            $key = $ip . ':' . $port;
-            if (!isset($devices[$key])) {
-                $devices[$key] = [
-                    'hostname'    => $hostname,
-                    'ip'          => $ip,
-                    'port'        => $port,
-                    'version'     => $version,
-                    'txt_records' => $txt_records,
-                    'unique_id'   => '',
-                ];
-            }
-        }
+    $data = json_decode($output, true);
+    if (!is_array($data)) {
+        return [];
     }
 
-    return array_values($devices);
+    // Se o script retornou um objeto de erro
+    if (isset($data['error'])) {
+        return [];
+    }
+
+    $devices = [];
+    foreach ($data as $dev) {
+        if (empty($dev['ip']) || !filter_var($dev['ip'], FILTER_VALIDATE_IP)) continue;
+        $devices[] = [
+            'hostname'  => $dev['hostname'] ?? '',
+            'ip'        => $dev['ip'],
+            'port'      => (int)($dev['port'] ?? 80),
+            'version'   => $dev['version'] ?? '',
+            'unique_id' => '',
+        ];
+    }
+
+    return $devices;
 }
 
 /**

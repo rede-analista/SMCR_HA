@@ -89,7 +89,7 @@ include __DIR__ . '/../includes/header.php';
                     inter-módulos, Telegram e todos os status registrados.
                 </p>
 
-                <form method="POST" action="/devices/delete.php?device_id=<?= $device_id ?>">
+                <form method="POST" action="<?= BASE ?>/devices/delete.php?device_id=<?= $device_id ?>">
                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
                     <div class="d-flex gap-2">
                         <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">
