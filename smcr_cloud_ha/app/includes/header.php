@@ -30,17 +30,16 @@ $page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
 <head>
     <meta charset="UTF-8">
     <script>
-    // Corrige links absolutos para HA Ingress antes do paint
+    // Corrige links <a href="/..."> para HA Ingress (forms já usam <?= BASE ?> via PHP)
     (function(){
         var base = document.documentElement.dataset.base || '';
-        console.log('[SMCR Ingress] BASE path:', base || '(empty - direct access)');
         if (!base) return;
         document.addEventListener('DOMContentLoaded', function(){
             document.querySelectorAll('a[href^="/"]').forEach(function(a){
-                a.href = base + a.getAttribute('href');
-            });
-            document.querySelectorAll('form[action^="/"]').forEach(function(f){
-                f.action = base + f.getAttribute('action');
+                var href = a.getAttribute('href');
+                if (!href.startsWith(base)) {
+                    a.href = base + href;
+                }
             });
         });
     })();
