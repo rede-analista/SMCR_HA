@@ -4,9 +4,6 @@ require_login();
 
 $db = getDB();
 
-// Auto-mark devices offline if last_seen > 2 minutes ago
-$db->exec("UPDATE devices SET online = 0 WHERE last_seen < DATE_SUB(NOW(), INTERVAL 2 MINUTE) OR last_seen IS NULL");
-
 $stmt = $db->query("
     SELECT d.id, d.name, d.unique_id, d.online, d.last_seen, d.created_at,
            ds.ip, ds.hostname, ds.firmware_version
