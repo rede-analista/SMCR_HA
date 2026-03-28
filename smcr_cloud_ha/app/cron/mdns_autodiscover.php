@@ -32,35 +32,19 @@ if ($last_run) {
 
 echo '[' . date('Y-m-d H:i:s') . '] Iniciando...' . PHP_EOL;
 
-// ─── Descobre dispositivos SMCR via mDNS ───
-$mdns_output = shell_exec('avahi-browse -t -r -p _http._tcp 2>/dev/null');
+// ─── Descobre dispositivos SMCR via mDNS (python3-zeroconf, sem avahi-daemon) ───
+$mdns_output = shell_exec('python3 /usr/local/bin/smcr_mdns_discover.py 2>/dev/null');
 $mdns_found  = [];
 
 if ($mdns_output) {
-    foreach (explode("\n", $mdns_output) as $line) {
-        $parts = str_getcsv(trim($line), ';');
-        if (count($parts) < 10 || $parts[0] !== '=') continue;
-
-        $hostname = rtrim($parts[6], '.');
-        $ip       = $parts[7];
-        $port     = (int)$parts[8];
-        $txt_raw  = $parts[9];
+    $devices = json_decode($mdns_output, true) ?: [];
+    foreach ($devices as $dev) {
+        $hostname = $dev['hostname'] ?? '';
+        $ip       = $dev['ip']       ?? '';
+        $port     = (int)($dev['port'] ?? 8080);
+        $version  = $dev['version']  ?? '';
 
         if (!filter_var($ip, FILTER_VALIDATE_IP)) continue;
-
-        $is_smcr = false;
-        $version = '';
-        preg_match_all('/"([^"]*)"/', $txt_raw, $m);
-        foreach ($m[1] as $txt) {
-            if (stripos($txt, 'device_type=smcr') !== false ||
-                stripos($txt, 'device=SMCR')      !== false) {
-                $is_smcr = true;
-            }
-            if (stripos($txt, 'version=') === 0) {
-                $version = substr($txt, 8);
-            }
-        }
-        if (!$is_smcr) continue;
 
         $mdns_found[$ip . ':' . $port] = [
             'hostname' => $hostname,
