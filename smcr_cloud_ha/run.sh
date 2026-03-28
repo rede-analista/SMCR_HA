@@ -105,11 +105,6 @@ else
     echo "[SMCR] Banco de dados existente encontrado, pulando inicialização."
 fi
 
-# ── Migrations (colunas adicionadas após schema inicial) ────────────────────
-mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock "${DB_NAME}" <<SQL 2>/dev/null
-ALTER TABLE device_status ADD COLUMN IF NOT EXISTS port SMALLINT UNSIGNED DEFAULT 8080;
-SQL
-
 # ── Ajusta permissões de sessão PHP ─────────────────────────────────────────
 mkdir -p /data/php_sessions
 chown www-data:www-data /data/php_sessions
