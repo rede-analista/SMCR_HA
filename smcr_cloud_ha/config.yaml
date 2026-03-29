@@ -1,5 +1,5 @@
 name: SMCR Cloud HA
-version: "1.0.35"
+version: "1.0.36"
 slug: smcr_cloud_ha
 description: Gerenciamento centralizado de dispositivos SMCR (ESP32) com suporte a MQTT e HA Discovery.
 url: https://github.com/rede-analista/SMCR_HA
