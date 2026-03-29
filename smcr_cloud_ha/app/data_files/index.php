@@ -32,6 +32,8 @@ $breadcrumb = [['label' => 'Arquivos Data']];
 include __DIR__ . '/../includes/header.php';
 ?>
 
+<script>const SMCR_BASE = '<?= defined('BASE') ? BASE : '' ?>';</script>
+
 <!-- CodeMirror -->
 <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
@@ -244,7 +246,7 @@ function selectFile(name, editable) {
 
     if (!editable) {
         show('editor-binary');
-        document.getElementById('binary-download').href = '/data/' + encodeURIComponent(name);
+        document.getElementById('binary-download').href = SMCR_BASE + '/data/' + encodeURIComponent(name);
         return;
     }
 
@@ -261,7 +263,7 @@ function selectFile(name, editable) {
         editor.setOption('mode', modeMap[ext] || 'text/plain');
     }
 
-    fetch('/api/data_files.php?action=read&file=' + encodeURIComponent(name))
+    fetch(SMCR_BASE + '/api/data_files.php?action=read&file=' + encodeURIComponent(name))
         .then(function(r) { return r.json(); })
         .then(function(data) {
             document.getElementById('btn_save').disabled = false;
@@ -284,7 +286,7 @@ function saveFile() {
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Salvando...';
     var content = getEditorValue();
 
-    fetch('/api/data_files.php?action=save', {
+    fetch(SMCR_BASE + '/api/data_files.php?action=save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file: currentFile, content: content })
@@ -320,7 +322,7 @@ function formatCode() {
 
 function deleteFile(name) {
     if (!confirm(`Excluir "${name}"?\n\nEsta ação não pode ser desfeita.`)) return;
-    fetch('/api/data_files.php?action=delete', {
+    fetch(SMCR_BASE + '/api/data_files.php?action=delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file: name })
@@ -357,7 +359,7 @@ function uploadFiles(files) {
 
         const fd = new FormData();
         fd.append('file', file);
-        fetch('/api/data_files.php?action=upload', { method: 'POST', body: fd })
+        fetch(SMCR_BASE + '/api/data_files.php?action=upload', { method: 'POST', body: fd })
             .then(r => r.json())
             .then(data => {
                 const status = row.querySelector('span:last-child');
