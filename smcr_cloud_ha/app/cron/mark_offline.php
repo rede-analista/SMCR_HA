@@ -8,9 +8,16 @@ require_once __DIR__ . '/../config/db.php';
 try {
     $db = getDB();
     $affected = $db->exec(
-        "UPDATE devices SET online = 0
-         WHERE online = 1
-           AND (last_seen < DATE_SUB(NOW(), INTERVAL 5 MINUTE) OR last_seen IS NULL)"
+        "UPDATE devices d
+         LEFT JOIN device_config dc ON dc.device_id = d.id
+         SET d.online = 0
+         WHERE d.online = 1
+           AND (d.last_seen IS NULL
+             OR d.last_seen < DATE_SUB(NOW(), INTERVAL
+                 IF(dc.cloud_heartbeat_enabled = 1 AND dc.cloud_heartbeat_interval_min > 0,
+                    dc.cloud_heartbeat_interval_min + 1,
+                    5)
+             MINUTE))"
     );
     if ($affected > 0) {
         echo "[SMCR cron] Marcados offline: {$affected} dispositivo(s)\n";
