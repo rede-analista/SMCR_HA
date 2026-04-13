@@ -103,6 +103,32 @@ SQL
     echo "[SMCR] Banco de dados inicializado com sucesso."
 else
     echo "[SMCR] Banco de dados existente encontrado, pulando inicialização."
+
+    # ── Aplica migrations pendentes no banco existente ───────────────────────
+    echo "[SMCR] Aplicando migrations pendentes..."
+    mysqld --user=mysql --datadir="${DATADIR}" \
+        --socket=/run/mysqld/mysqld.sock --pid-file=/run/mysqld/mysqld.pid \
+        --skip-networking 2>/dev/null &
+    MYSQL_PID=$!
+
+    for i in $(seq 1 30); do
+        if mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock \
+                -e "SELECT 1" 2>/dev/null; then
+            break
+        fi
+        sleep 1
+    done
+
+    for MIGRATION in /var/www/html/install/migrate_*.sql; do
+        echo "[SMCR] Aplicando migration: $(basename ${MIGRATION})..."
+        mysql -u root -p"${DB_PASS}" --socket=/run/mysqld/mysqld.sock "${DB_NAME}" \
+            < "${MIGRATION}" && echo "[SMCR] Migration OK: $(basename ${MIGRATION})" \
+            || echo "[SMCR] AVISO: falha ao aplicar $(basename ${MIGRATION})"
+    done
+
+    kill "${MYSQL_PID}"
+    wait "${MYSQL_PID}" 2>/dev/null || true
+    echo "[SMCR] Migrations concluídas."
 fi
 
 # ── Ajusta permissões de sessão PHP ─────────────────────────────────────────
