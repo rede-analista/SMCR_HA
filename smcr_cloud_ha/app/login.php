@@ -3,7 +3,7 @@ require_once __DIR__ . '/config/auth.php';
 session_init();
 
 if (is_logged_in()) {
-    header('Location: ' . BASE . '/dashboard.php');
+    header('Location: /dashboard.php');
     exit;
 }
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '' || $password === '') {
         $error = 'Preencha o usuário e a senha.';
     } elseif (login($username, $password)) {
-        header('Location: ' . BASE . '/dashboard.php');
+        header('Location: /dashboard.php');
         exit;
     } else {
         $error = 'Usuário ou senha inválidos.';
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <?php endif; ?>
 
-            <form method="POST" action="<?= BASE ?>/login.php">
+            <form method="POST" action="/login.php">
                 <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
                 <div class="mb-3">

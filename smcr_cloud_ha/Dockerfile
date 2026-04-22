@@ -11,13 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     python3 \
     python3-zeroconf \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 # Instala extensões PHP necessárias
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Habilita módulos Apache
-RUN a2enmod rewrite headers
+RUN a2enmod rewrite headers ssl
 
 # Desabilita o site padrão do Apache
 RUN a2dissite 000-default || true

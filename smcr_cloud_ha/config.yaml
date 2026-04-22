@@ -1,5 +1,5 @@
 name: SMCR Cloud HA
-version: "1.0.55"
+version: "1.0.56"
 slug: smcr_cloud_ha
 description: Gerenciamento centralizado de dispositivos SMCR (ESP32) com suporte a MQTT e HA Discovery.
 url: https://github.com/rede-analista/SMCR_HA
@@ -13,18 +13,22 @@ ingress: true
 ingress_port: 8765
 ports:
   8765/tcp: 8765
+  8766/tcp: 8766
 ports_description:
-  8765/tcp: Interface web do SMCR Cloud
+  8765/tcp: Interface web HTTP do SMCR Cloud
+  8766/tcp: Interface web HTTPS do SMCR Cloud
 map:
   - data:rw
 options:
-  port: 8765
+  http_port: 8765
+  https_port: 8766
   db_password: "smcr_secret_2024"
   admin_user: "admin"
   admin_password: "admin123"
   reset_on_start: false
 schema:
-  port: port
+  http_port: port
+  https_port: port
   db_password: str
   admin_user: str
   admin_password: str

@@ -3,8 +3,8 @@ require_once __DIR__ . '/config/auth.php';
 session_init();
 
 if (is_logged_in()) {
-    header('Location: ' . BASE . '/dashboard.php');
+    header('Location: /dashboard.php');
 } else {
-    header('Location: ' . BASE . '/login.php');
+    header('Location: /login.php');
 }
 exit;

@@ -2,7 +2,8 @@
 set -e
 
 # ── Lê configurações de /data/options.json ──────────────────────────────────
-PORT=$(jq -r '.port // 8765' /data/options.json)
+HTTP_PORT=$(jq -r '.http_port // 8765' /data/options.json)
+HTTPS_PORT=$(jq -r '.https_port // 8766' /data/options.json)
 DB_PASS=$(jq -r '.db_password // "smcr_secret_2024"' /data/options.json)
 ADMIN_USER=$(jq -r '.admin_user // "admin"' /data/options.json)
 ADMIN_PASSWORD=$(jq -r '.admin_password // "admin123"' /data/options.json)
@@ -13,7 +14,7 @@ DB_USER="smcr"
 DATADIR="/data/mariadb"
 RESET=$(jq -r '.reset_on_start // false' /data/options.json)
 
-echo "[SMCR] Iniciando add-on SMCR Cloud na porta ${PORT}..."
+echo "[SMCR] Iniciando add-on SMCR Cloud (HTTP:${HTTP_PORT} HTTPS:${HTTPS_PORT})..."
 
 # ── Reset solicitado via configuração do add-on ──────────────────────────────
 if [ "${RESET}" = "true" ]; then
@@ -22,9 +23,20 @@ if [ "${RESET}" = "true" ]; then
     echo "[SMCR] Banco removido. Defina reset_on_start=false na configuração do add-on."
 fi
 
-# ── Configura Apache com a porta escolhida ───────────────────────────────────
-sed -i "s/__PORT__/${PORT}/g" /etc/apache2/sites-available/smcr.conf
-sed -i "s/__PORT__/${PORT}/g" /etc/apache2/ports.conf
+# ── Gera certificado autoassinado para HTTPS ─────────────────────────────────
+mkdir -p /etc/apache2/ssl
+if [ ! -f /etc/apache2/ssl/smcr.crt ]; then
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+        -keyout /etc/apache2/ssl/smcr.key \
+        -out /etc/apache2/ssl/smcr.crt \
+        -subj "/CN=smcr_cloud_ha" 2>/dev/null
+fi
+
+# ── Configura Apache com as portas HTTP e HTTPS ──────────────────────────────
+sed -i "s/__HTTP_PORT__/${HTTP_PORT}/g" /etc/apache2/sites-available/smcr.conf
+sed -i "s/__HTTPS_PORT__/${HTTPS_PORT}/g" /etc/apache2/sites-available/smcr.conf
+sed -i "s/__HTTP_PORT__/${HTTP_PORT}/g" /etc/apache2/ports.conf
+sed -i "s/__HTTPS_PORT__/${HTTPS_PORT}/g" /etc/apache2/ports.conf
 
 # ── Gera db.php com as credenciais do container ──────────────────────────────
 cat > /var/www/html/config/db.php <<EOF

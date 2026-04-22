@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt  = $db->prepare("UPDATE settings SET value = ? WHERE `key` = 'register_token'");
         $stmt->execute([$token]);
         set_flash('success', 'Token de auto-registro regenerado com sucesso.');
-        header('Location: ' . BASE . '/settings.php');
+        header('Location: /settings.php');
         exit;
     }
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$hash, $_SESSION['user_id']]);
             set_flash('success', 'Senha alterada com sucesso.');
         }
-        header('Location: ' . BASE . '/settings.php');
+        header('Location: /settings.php');
         exit;
     }
 
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 set_flash('success', "Usuário \"{$username}\" criado com sucesso.");
             }
         }
-        header('Location: ' . BASE . '/settings.php');
+        header('Location: /settings.php');
         exit;
     }
 
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$uid]);
             set_flash('success', 'Usuário excluído.');
         }
-        header('Location: ' . BASE . '/settings.php');
+        header('Location: /settings.php');
         exit;
     }
 
@@ -111,10 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            ->execute([$dashboard_refresh, $dashboard_refresh]);
 
         set_flash('success', 'Configurações de automação salvas.');
-        header('Location: ' . BASE . '/settings.php');
+        header('Location: /settings.php');
         exit;
     }
-
 }
 
 // Load data
@@ -310,7 +309,6 @@ include __DIR__ . '/includes/header.php';
             </div>
         </div>
     </div>
-
 
 </div>
 
