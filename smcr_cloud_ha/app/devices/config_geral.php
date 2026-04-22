@@ -505,7 +505,7 @@ include __DIR__ . '/../includes/header.php';
             <button type="submit" class="btn btn-primary">
                 <i class="bi bi-check-lg me-1"></i>Salvar Configurações
             </button>
-            <a href="/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
+            <a href="<?= BASE ?>/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
         </div>
     </div><!-- /.card -->
 </form>

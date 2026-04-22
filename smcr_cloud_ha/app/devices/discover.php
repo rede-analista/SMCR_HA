@@ -148,7 +148,7 @@ include __DIR__ . '/../includes/header.php';
                         <button class="btn btn-outline-secondary" onclick="copyText(this, document.getElementById('reg_token_field').value)">
                             <i class="bi bi-clipboard"></i>
                         </button>
-                        <a href="/settings.php" class="btn btn-outline-warning" title="Gerenciar token">
+                        <a href="<?= BASE ?>/settings.php" class="btn btn-outline-warning" title="Gerenciar token">
                             <i class="bi bi-sliders"></i>
                         </a>
                     </div>

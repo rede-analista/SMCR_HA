@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -90,21 +90,24 @@ include __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
             </div>
             <div class="d-flex gap-2">
-                <a href="/devices/edit.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="<?= BASE ?>/devices/edit.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-pencil me-1"></i>Editar Nome
                 </a>
-                <a href="/devices/config_geral.php?device_id=<?= $device_id ?>" class="btn btn-primary btn-sm">
+                <a href="<?= BASE ?>/devices/config_geral.php?device_id=<?= $device_id ?>" class="btn btn-primary btn-sm">
                     <i class="bi bi-gear me-1"></i>Configurar
                 </a>
-                <a href="/api/export_device.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="<?= BASE ?>/api/export_device.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-download me-1"></i>Exportar
                 </a>
+                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalImport">
+                    <i class="bi bi-upload me-1"></i>Importar
+                </button>
                 <button id="btn_toggle_ativo" class="btn btn-sm <?= $is_ativo ? 'btn-outline-secondary' : 'btn-secondary' ?>"
                         onclick="toggleAtivo(<?= $device_id ?>)"
                         title="<?= $is_ativo ? 'Desativar dispositivo' : 'Ativar dispositivo' ?>">
                     <i class="bi <?= $is_ativo ? 'bi-pause-circle me-1' : 'bi-play-circle me-1' ?>"></i><?= $is_ativo ? 'Desativar' : 'Ativar' ?>
                 </button>
-                <a href="/devices/delete.php?device_id=<?= $device_id ?>" class="btn btn-outline-danger btn-sm">
+                <a href="<?= BASE ?>/devices/delete.php?device_id=<?= $device_id ?>" class="btn btn-outline-danger btn-sm">
                     <i class="bi bi-trash me-1"></i>Excluir
                 </a>
             </div>
@@ -235,15 +238,15 @@ include __DIR__ . '/../includes/header.php';
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
-                    <a href="/devices/config_pinos.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-diagram-3 me-2 text-primary"></i>Pinos configurados</span>
                         <span class="badge bg-primary rounded-pill"><?= $pins_count ?></span>
                     </a>
-                    <a href="/devices/config_acoes.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_acoes.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-lightning me-2 text-warning"></i>Ações configuradas</span>
                         <span class="badge bg-warning text-dark rounded-pill"><?= $actions_count ?></span>
                     </a>
-                    <a href="/devices/config_intermod.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-share me-2 text-info"></i>Inter-Módulos</span>
                         <span class="badge bg-info text-dark rounded-pill"><?= $intermod_count ?></span>
                     </a>
@@ -272,7 +275,7 @@ include __DIR__ . '/../includes/header.php';
             foreach ($config_sections as $sec):
             ?>
             <div class="col-6 col-md-4 col-lg-2">
-                <a href="<?= $sec['url'] ?>?device_id=<?= $device_id ?>" class="text-decoration-none">
+                <a href="<?= BASE . $sec['url'] ?>?device_id=<?= $device_id ?>" class="text-decoration-none">
                     <div class="card h-100 text-center p-3 hover-shadow" style="transition:all 0.2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div style="width:44px;height:44px;background:<?= $sec['color'] ?>;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
                             <i class="bi <?= $sec['icon'] ?> text-white fs-5"></i>
@@ -288,6 +291,8 @@ include __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
+const BASE_PATH = document.documentElement.dataset.base || '';
+
 function toggleToken() {
     const input = document.getElementById('api_token');
     const eye = document.getElementById('token_eye');
@@ -313,7 +318,7 @@ function pullDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Importando...';
 
-    fetch('/api/sync_device.php', {
+    fetch(BASE_PATH + '/api/sync_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id }),
@@ -341,7 +346,7 @@ function rebootDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Reiniciando...';
 
-    fetch('/api/reboot_device.php', {
+    fetch(BASE_PATH + '/api/reboot_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id }),
@@ -370,7 +375,7 @@ function toggleRebootOnSync(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>';
 
-    fetch('/api/set_reboot_on_sync.php', {
+    fetch(BASE_PATH + '/api/set_reboot_on_sync.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, enable }),
@@ -405,7 +410,7 @@ function toggleOtaOnSync(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>';
 
-    fetch('/api/set_ota_on_sync.php', {
+    fetch(BASE_PATH + '/api/set_ota_on_sync.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, enable }),
@@ -437,7 +442,7 @@ function pushDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enviando...';
 
-    fetch('/api/push_device.php', {
+    fetch(BASE_PATH + '/api/push_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, push_config: true }),
@@ -463,7 +468,7 @@ function toggleAtivo(device_id) {
     const msg = ativando ? 'Ativar este dispositivo?' : 'Desativar este dispositivo?\n\nEle não receberá sync e não será monitorado.';
     if (!confirm(msg)) return;
     btn.disabled = true;
-    fetch('/api/toggle_device_active.php', {
+    fetch(BASE_PATH + '/api/toggle_device_active.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id: device_id })
@@ -475,6 +480,69 @@ function toggleAtivo(device_id) {
     })
     .catch(err => { btn.disabled = false; alert('Erro: ' + err.message); });
 }
+
+function importBackup() {
+    const fileInput = document.getElementById('import_file');
+    const updateToken = document.getElementById('import_update_token').checked;
+    if (!fileInput.files.length) { alert('Selecione um arquivo de backup.'); return; }
+
+    const btn = document.getElementById('btn_import_submit');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Importando...';
+
+    const fd = new FormData();
+    fd.append('device_id', <?= $device_id ?>);
+    fd.append('update_token', updateToken ? '1' : '');
+    fd.append('backup_file', fileInput.files[0]);
+
+    fetch(BASE_PATH + '/api/import_device.php', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-upload me-1"></i>Restaurar';
+            if (!data.ok) { alert('Erro:\n' + data.error); return; }
+            bootstrap.Modal.getInstance(document.getElementById('modalImport')).hide();
+            alert('Backup restaurado com sucesso!');
+            location.reload();
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-upload me-1"></i>Restaurar';
+            alert('Erro: ' + err.message);
+        });
+}
 </script>
+
+<!-- Modal Import -->
+<div class="modal fade" id="modalImport" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-upload me-2"></i>Importar Backup</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">Selecione um arquivo <code>.json</code> exportado pelo SMCR Cloud. As configurações, pinos, ações e inter-módulos serão substituídos pelos dados do backup.</p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Arquivo de Backup</label>
+                    <input type="file" id="import_file" class="form-control" accept=".json">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="import_update_token">
+                    <label class="form-check-label" for="import_update_token">
+                        Restaurar chave de API (api_token)
+                    </label>
+                    <div class="form-text text-warning"><i class="bi bi-exclamation-triangle me-1"></i>Só ative se o ESP32 ainda usa a chave do backup.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn_import_submit" class="btn btn-primary" onclick="importBackup()">
+                    <i class="bi bi-upload me-1"></i>Restaurar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

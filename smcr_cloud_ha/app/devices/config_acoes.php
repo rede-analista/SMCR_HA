@@ -133,7 +133,7 @@ include __DIR__ . '/../includes/header.php';
 <?php if (empty($device_pins)): ?>
 <div class="alert alert-warning">
     <i class="bi bi-exclamation-triangle me-2"></i>
-    Nenhum pino configurado para este dispositivo. <a href="/devices/config_pinos.php?device_id=<?= $device_id ?>">Configure pinos</a> antes de adicionar ações.
+    Nenhum pino configurado para este dispositivo. <a href="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>">Configure pinos</a> antes de adicionar ações.
 </div>
 <?php endif; ?>
 
@@ -268,7 +268,7 @@ include __DIR__ . '/../includes/header.php';
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-lg me-1"></i><?= $edit_action ? 'Salvar Alterações' : 'Adicionar Ação' ?>
                 </button>
-                <a href="/devices/config_acoes.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="<?= BASE ?>/devices/config_acoes.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
     </div>
