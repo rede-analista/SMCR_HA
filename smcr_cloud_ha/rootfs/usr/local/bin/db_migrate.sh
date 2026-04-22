@@ -18,6 +18,7 @@ ALTER TABLE device_status ADD COLUMN IF NOT EXISTS port SMALLINT UNSIGNED DEFAUL
 ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_heartbeat_enabled TINYINT(1) DEFAULT 0;
 ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_heartbeat_interval_min SMALLINT UNSIGNED DEFAULT 5;
 ALTER TABLE devices ADD COLUMN IF NOT EXISTS ativo TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Quando 0, não recebe sync e não é monitorado';
+ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_use_https TINYINT(1) NOT NULL DEFAULT 0;
 SQL
 
 echo "[SMCR] Migrations aplicadas."
