@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     python3 \
     python3-zeroconf \
+    avahi-utils \
+    avahi-daemon \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
