@@ -141,7 +141,7 @@ include __DIR__ . '/../includes/header.php';
         <h6 class="mb-0 fw-bold"><i class="bi bi-sliders me-1"></i>Configurações Globais</h6>
     </div>
     <div class="card-body">
-        <form method="POST" action="/devices/config_intermod.php?device_id=<?= $device_id ?>">
+        <form method="POST" action="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>">
             <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
             <input type="hidden" name="action" value="save_global">
 
@@ -194,7 +194,7 @@ include __DIR__ . '/../includes/header.php';
         <h6 class="mb-0"><?= $edit_module ? 'Editar Módulo' : 'Adicionar Módulo' ?></h6>
     </div>
     <div class="card-body">
-        <form method="POST" action="/devices/config_intermod.php?device_id=<?= $device_id ?>">
+        <form method="POST" action="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>">
             <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
             <input type="hidden" name="action" value="save_module">
             <input type="hidden" name="mod_id" value="<?= $edit_module ? $edit_module['id'] : 0 ?>">
@@ -355,7 +355,7 @@ include __DIR__ . '/../includes/header.php';
                         <td><?= $mod['pins_healthcheck'] ? h($mod['pins_healthcheck']) . ($mod['healthcheck_alert_enabled'] ? ' ✓' : ' ✗') : '<span class="text-muted">—</span>' ?></td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">
-                                <form method="POST" action="/devices/config_intermod.php?device_id=<?= $device_id ?>"
+                                <form method="POST" action="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>"
                                       style="display:inline">
                                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
                                     <input type="hidden" name="action" value="toggle_module">
@@ -369,7 +369,7 @@ include __DIR__ . '/../includes/header.php';
                                    class="btn btn-outline-warning" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form method="POST" action="/devices/config_intermod.php?device_id=<?= $device_id ?>"
+                                <form method="POST" action="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>"
                                       style="display:inline"
                                       onsubmit="return confirm('Remover módulo <?= h(addslashes($mod['module_id'])) ?>?')">
                                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">

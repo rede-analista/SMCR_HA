@@ -62,7 +62,7 @@ include __DIR__ . '/../includes/header.php';
 
 <div class="row g-4">
     <div class="col-lg-7">
-        <form method="POST" action="/devices/config_telegram.php?device_id=<?= $device_id ?>">
+        <form method="POST" action="<?= BASE ?>/devices/config_telegram.php?device_id=<?= $device_id ?>">
             <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
             <div class="card">

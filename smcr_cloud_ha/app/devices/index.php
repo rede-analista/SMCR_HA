@@ -170,7 +170,7 @@ function toggleAtivo(deviceId, btn) {
     const msg = ativando ? 'Ativar este dispositivo?' : 'Desativar este dispositivo? Ele não receberá sync nem será monitorado.';
     if (!confirm(msg)) return;
     btn.disabled = true;
-    fetch('/api/toggle_device_active.php', {
+    fetch(BASE_PATH + '/api/toggle_device_active.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id: deviceId })
@@ -188,7 +188,7 @@ function setAllOta() {
     const btn = document.getElementById('btn_ota_all');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Agendando...';
-    fetch('/api/set_ota_all.php', { method: 'POST' })
+    fetch(BASE_PATH + '/api/set_ota_all.php', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             btn.disabled = false;
@@ -205,7 +205,7 @@ function setAllReboot() {
     const btn = document.getElementById('btn_reboot_all');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Agendando...';
-    fetch('/api/set_reboot_all.php', { method: 'POST' })
+    fetch(BASE_PATH + '/api/set_reboot_all.php', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             btn.disabled = false;

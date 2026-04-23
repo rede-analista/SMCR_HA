@@ -32,6 +32,7 @@ $page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= h($page_title) ?> - SMCR Cloud</title>
     <link rel="icon" href="<?= BASE ?>/data/favicon.ico" type="image/x-icon">
+    <script>const BASE_PATH = <?= json_encode(BASE) ?>;</script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>

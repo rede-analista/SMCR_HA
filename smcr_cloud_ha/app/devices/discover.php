@@ -187,7 +187,7 @@ version     = 2.1.2</pre>
 </div>
 
 <!-- Quick-register form -->
-<form method="POST" action="/devices/discover.php" id="quick_register_form">
+<form method="POST" action="<?= BASE ?>/devices/discover.php" id="quick_register_form">
     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
     <input type="hidden" name="quick_register" value="1">
     <input type="hidden" name="unique_id" id="qr_unique_id">
@@ -259,7 +259,7 @@ document.getElementById('btn_mdns').addEventListener('click', function () {
     progress.classList.remove('d-none');
     results.classList.add('d-none');
 
-    fetch('/api/mdns_scan.php', { method: 'POST' })
+    fetch(BASE_PATH + '/api/mdns_scan.php', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             progress.classList.add('d-none');
@@ -294,7 +294,7 @@ document.getElementById('btn_scan').addEventListener('click', function () {
     results.classList.add('d-none');
     document.getElementById('scan_status').textContent = `Varrendo ${ip_range}:${port}...`;
 
-    fetch('/api/scan.php', {
+    fetch(BASE_PATH + '/api/scan.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip_range, port }),

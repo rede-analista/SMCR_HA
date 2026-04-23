@@ -47,7 +47,7 @@ include __DIR__ . '/../includes/header.php';
                 <h5 class="mb-0">Editar Dispositivo</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="/devices/edit.php?device_id=<?= $device_id ?>">
+                <form method="POST" action="<?= BASE ?>/devices/edit.php?device_id=<?= $device_id ?>">
                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
                     <div class="mb-3">

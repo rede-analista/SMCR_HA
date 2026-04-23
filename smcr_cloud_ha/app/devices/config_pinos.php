@@ -133,7 +133,7 @@ include __DIR__ . '/../includes/header.php';
         <h6 class="mb-0"><?= $edit_pin ? 'Editar Pino' : 'Adicionar Pino' ?></h6>
     </div>
     <div class="card-body">
-        <form method="POST" action="/devices/config_pinos.php?device_id=<?= $device_id ?>">
+        <form method="POST" action="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>">
             <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
             <input type="hidden" name="action" value="save">
             <input type="hidden" name="pin_id" value="<?= $edit_pin ? $edit_pin['id'] : 0 ?>">
@@ -279,7 +279,7 @@ include __DIR__ . '/../includes/header.php';
                                    class="btn btn-outline-warning" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form method="POST" action="/devices/config_pinos.php?device_id=<?= $device_id ?>"
+                                <form method="POST" action="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>"
                                       style="display:inline"
                                       onsubmit="return confirm('Remover GPIO <?= $pin['pino'] ?> (<?= h(addslashes($pin['nome'])) ?>)?')">
                                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">

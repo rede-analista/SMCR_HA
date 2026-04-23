@@ -294,7 +294,7 @@ include __DIR__ . '/../includes/header.php';
                 </ul>
             </div>
             <div class="card-body">
-                <form method="POST" action="/devices/add.php" enctype="multipart/form-data" id="addForm">
+                <form method="POST" action="<?= BASE ?>/devices/add.php" enctype="multipart/form-data" id="addForm">
                     <input type="hidden" name="csrf_token" value="<?= h(csrf_token()) ?>">
 
                     <!-- === MANUAL === -->

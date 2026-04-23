@@ -316,7 +316,7 @@ function pullDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Importando...';
 
-    fetch('/api/sync_device.php', {
+    fetch(BASE_PATH + '/api/sync_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id }),
@@ -344,7 +344,7 @@ function rebootDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Reiniciando...';
 
-    fetch('/api/reboot_device.php', {
+    fetch(BASE_PATH + '/api/reboot_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id }),
@@ -373,7 +373,7 @@ function toggleRebootOnSync(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>';
 
-    fetch('/api/set_reboot_on_sync.php', {
+    fetch(BASE_PATH + '/api/set_reboot_on_sync.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, enable }),
@@ -408,7 +408,7 @@ function toggleOtaOnSync(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>';
 
-    fetch('/api/set_ota_on_sync.php', {
+    fetch(BASE_PATH + '/api/set_ota_on_sync.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, enable }),
@@ -440,7 +440,7 @@ function pushDevice(device_id) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Enviando...';
 
-    fetch('/api/push_device.php', {
+    fetch(BASE_PATH + '/api/push_device.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id, push_config: true }),
@@ -466,7 +466,7 @@ function toggleAtivo(device_id) {
     const msg = ativando ? 'Ativar este dispositivo?' : 'Desativar este dispositivo?\n\nEle não receberá sync e não será monitorado.';
     if (!confirm(msg)) return;
     btn.disabled = true;
-    fetch('/api/toggle_device_active.php', {
+    fetch(BASE_PATH + '/api/toggle_device_active.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ device_id: device_id })
@@ -493,7 +493,7 @@ function importBackup() {
     fd.append('update_token', updateToken ? '1' : '');
     fd.append('backup_file', fileInput.files[0]);
 
-    fetch('/api/import_device.php', { method: 'POST', body: fd })
+    fetch(BASE_PATH + '/api/import_device.php', { method: 'POST', body: fd })
         .then(r => r.json())
         .then(data => {
             btn.disabled = false;
