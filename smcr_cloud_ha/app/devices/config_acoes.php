@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare('DELETE FROM device_actions WHERE id = ? AND device_id = ?');
         $stmt->execute([$act_id, $device_id]);
         set_flash('success', 'Ação removida com sucesso.');
-        header('Location: /devices/config_acoes.php?device_id=' . $device_id);
+        header('Location: ' . BASE . '/devices/config_acoes.php?device_id=' . $device_id);
         exit;
     }
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 set_flash('danger', 'Erro: já existe uma ação ' . $numero_acao . ' para este pino.');
             }
         }
-        header('Location: /devices/config_acoes.php?device_id=' . $device_id);
+        header('Location: ' . BASE . '/devices/config_acoes.php?device_id=' . $device_id);
         exit;
     }
 }

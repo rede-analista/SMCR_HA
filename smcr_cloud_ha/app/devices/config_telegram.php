@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db->prepare('UPDATE device_config SET ' . implode(', ', $set) . ' WHERE device_id = ?')->execute($vals);
 
     set_flash('success', 'Configurações do Telegram salvas com sucesso.');
-    header('Location: /devices/config_telegram.php?device_id=' . $device_id);
+    header('Location: ' . BASE . '/devices/config_telegram.php?device_id=' . $device_id);
     exit;
 }
 

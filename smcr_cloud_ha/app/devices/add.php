@@ -249,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $msg = $import_mode ? "Dispositivo \"$unique_id\" importado com sucesso!" : "Dispositivo \"$unique_id\" cadastrado com sucesso!";
             set_flash('success', $msg);
-            header('Location: /devices/view.php?device_id=' . $device_id);
+            header('Location: ' . BASE . '/devices/view.php?device_id=' . $device_id);
             exit;
         } catch (Exception $e) {
             $db->rollBack();

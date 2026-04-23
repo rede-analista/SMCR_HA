@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare('DELETE FROM device_pins WHERE id = ? AND device_id = ?');
         $stmt->execute([$pin_id, $device_id]);
         set_flash('success', 'Pino removido com sucesso.');
-        header('Location: /devices/config_pinos.php?device_id=' . $device_id);
+        header('Location: ' . BASE . '/devices/config_pinos.php?device_id=' . $device_id);
         exit;
     }
 
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 set_flash('danger', 'Erro: pino ' . $pino . ' já está cadastrado para este dispositivo.');
             }
         }
-        header('Location: /devices/config_pinos.php?device_id=' . $device_id);
+        header('Location: ' . BASE . '/devices/config_pinos.php?device_id=' . $device_id);
         exit;
     }
 }

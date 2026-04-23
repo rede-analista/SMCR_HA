@@ -11,7 +11,7 @@ $device = $stmt->fetch();
 
 if (!$device) {
     set_flash('danger', 'Dispositivo não encontrado.');
-    header('Location: /devices/index.php');
+    header('Location: ' . BASE . '/devices/index.php');
     exit;
 }
 
@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$device_id]);
 
         set_flash('success', 'Dispositivo "' . $device['unique_id'] . '" excluído com sucesso.');
-        header('Location: /devices/index.php');
+        header('Location: ' . BASE . '/devices/index.php');
         exit;
     } else {
-        header('Location: /devices/index.php');
+        header('Location: ' . BASE . '/devices/index.php');
         exit;
     }
 }
