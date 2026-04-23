@@ -275,7 +275,7 @@ include __DIR__ . '/../includes/header.php';
             foreach ($config_sections as $sec):
             ?>
             <div class="col-6 col-md-4 col-lg-2">
-                <a href="<?= $sec['url'] ?>?device_id=<?= $device_id ?>" class="text-decoration-none">
+                <a href="<?= BASE . $sec['url'] ?>?device_id=<?= $device_id ?>" class="text-decoration-none">
                     <div class="card h-100 text-center p-3 hover-shadow" style="transition:all 0.2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div style="width:44px;height:44px;background:<?= $sec['color'] ?>;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;">
                             <i class="bi <?= $sec['icon'] ?> text-white fs-5"></i>
