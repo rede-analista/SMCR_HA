@@ -2,8 +2,8 @@
 set -e
 
 # ── Lê configurações de /data/options.json ──────────────────────────────────
-HTTP_PORT=$(jq -r '.http_port // 8765' /data/options.json)
-HTTPS_PORT=$(jq -r '.https_port // 8766' /data/options.json)
+HTTP_PORT=$(jq -r '.http_port // 2082' /data/options.json)
+HTTPS_PORT=$(jq -r '.https_port // 2083' /data/options.json)
 DB_PASS=$(jq -r '.db_password // "smcr_secret_2024"' /data/options.json)
 ADMIN_USER=$(jq -r '.admin_user // "admin"' /data/options.json)
 ADMIN_PASSWORD=$(jq -r '.admin_password // "admin123"' /data/options.json)

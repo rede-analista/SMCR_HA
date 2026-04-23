@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Habilita módulos Apache
-RUN a2enmod rewrite headers ssl
+RUN a2enmod rewrite headers ssl && a2dissite default-ssl || true
 
 # Desabilita o site padrão do Apache
 RUN a2dissite 000-default || true
