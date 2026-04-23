@@ -320,7 +320,7 @@ include __DIR__ . '/../includes/header.php';
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-lg me-1"></i>Cadastrar Dispositivo
                             </button>
-                            <a href="/devices/index.php" class="btn btn-outline-secondary">Cancelar</a>
+                            <a href="<?= BASE ?>/devices/index.php" class="btn btn-outline-secondary">Cancelar</a>
                         </div>
                     </div>
 
@@ -359,7 +359,7 @@ include __DIR__ . '/../includes/header.php';
                             <button type="submit" class="btn btn-primary" id="btn-import-submit" disabled>
                                 <i class="bi bi-upload me-1"></i>Importar e Cadastrar
                             </button>
-                            <a href="/devices/index.php" class="btn btn-outline-secondary">Cancelar</a>
+                            <a href="<?= BASE ?>/devices/index.php" class="btn btn-outline-secondary">Cancelar</a>
                         </div>
                     </div>
                 </form>

@@ -121,7 +121,7 @@ include __DIR__ . '/../includes/header.php';
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-check-lg me-1"></i>Salvar Configurações
                     </button>
-                    <a href="/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
+                    <a href="<?= BASE ?>/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
                 </div>
             </div>
         </form>
@@ -152,7 +152,7 @@ include __DIR__ . '/../includes/header.php';
                     </li>
                     <li>
                         <strong>Configure as ações:</strong><br>
-                        Em <a href="/devices/config_acoes.php?device_id=<?= $device_id ?>">Configuração de Ações</a>,
+                        Em <a href="<?= BASE ?>/devices/config_acoes.php?device_id=<?= $device_id ?>">Configuração de Ações</a>,
                         marque a opção "Notificar via Telegram" para os eventos desejados.
                     </li>
                 </ol>

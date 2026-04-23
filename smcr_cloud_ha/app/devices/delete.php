@@ -95,7 +95,7 @@ include __DIR__ . '/../includes/header.php';
                         <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">
                             <i class="bi bi-trash-fill me-1"></i>Sim, excluir definitivamente
                         </button>
-                        <a href="/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">
+                        <a href="<?= BASE ?>/devices/view.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">
                             Cancelar
                         </a>
                     </div>

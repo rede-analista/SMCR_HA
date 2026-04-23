@@ -168,7 +168,7 @@ include __DIR__ . '/includes/header.php';
                 <p class="small fw-semibold mb-1">Endpoint de registro:</p>
                 <code class="d-block bg-light rounded p-2 small">POST http://smcr.pensenet.com.br/api/register.php</code>
                 <p class="small text-muted mt-2 mb-0">
-                    <a href="/devices/discover.php">Descobrir dispositivos na rede &rarr;</a>
+                    <a href="<?= BASE ?>/devices/discover.php">Descobrir dispositivos na rede &rarr;</a>
                 </p>
             </div>
         </div>

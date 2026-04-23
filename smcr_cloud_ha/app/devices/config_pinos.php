@@ -214,7 +214,7 @@ include __DIR__ . '/../includes/header.php';
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-lg me-1"></i><?= $edit_pin ? 'Salvar Alterações' : 'Adicionar Pino' ?>
                 </button>
-                <a href="/devices/config_pinos.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
     </div>

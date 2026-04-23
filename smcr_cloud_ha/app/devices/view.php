@@ -90,13 +90,13 @@ include __DIR__ . '/../includes/header.php';
                 <?php endif; ?>
             </div>
             <div class="d-flex gap-2">
-                <a href="/devices/edit.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="<?= BASE ?>/devices/edit.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-pencil me-1"></i>Editar Nome
                 </a>
-                <a href="/devices/config_geral.php?device_id=<?= $device_id ?>" class="btn btn-primary btn-sm">
+                <a href="<?= BASE ?>/devices/config_geral.php?device_id=<?= $device_id ?>" class="btn btn-primary btn-sm">
                     <i class="bi bi-gear me-1"></i>Configurar
                 </a>
-                <a href="/api/export_device.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
+                <a href="<?= BASE ?>/api/export_device.php?device_id=<?= $device_id ?>" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-download me-1"></i>Exportar
                 </a>
                 <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalImport">
@@ -107,7 +107,7 @@ include __DIR__ . '/../includes/header.php';
                         title="<?= $is_ativo ? 'Desativar dispositivo' : 'Ativar dispositivo' ?>">
                     <i class="bi <?= $is_ativo ? 'bi-pause-circle me-1' : 'bi-play-circle me-1' ?>"></i><?= $is_ativo ? 'Desativar' : 'Ativar' ?>
                 </button>
-                <a href="/devices/delete.php?device_id=<?= $device_id ?>" class="btn btn-outline-danger btn-sm">
+                <a href="<?= BASE ?>/devices/delete.php?device_id=<?= $device_id ?>" class="btn btn-outline-danger btn-sm">
                     <i class="bi bi-trash me-1"></i>Excluir
                 </a>
             </div>
@@ -238,15 +238,15 @@ include __DIR__ . '/../includes/header.php';
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
-                    <a href="/devices/config_pinos.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_pinos.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-diagram-3 me-2 text-primary"></i>Pinos configurados</span>
                         <span class="badge bg-primary rounded-pill"><?= $pins_count ?></span>
                     </a>
-                    <a href="/devices/config_acoes.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_acoes.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-lightning me-2 text-warning"></i>Ações configuradas</span>
                         <span class="badge bg-warning text-dark rounded-pill"><?= $actions_count ?></span>
                     </a>
-                    <a href="/devices/config_intermod.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="<?= BASE ?>/devices/config_intermod.php?device_id=<?= $device_id ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-share me-2 text-info"></i>Inter-Módulos</span>
                         <span class="badge bg-info text-dark rounded-pill"><?= $intermod_count ?></span>
                     </a>
