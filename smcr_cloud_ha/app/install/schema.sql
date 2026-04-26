@@ -165,3 +165,15 @@ CREATE TABLE IF NOT EXISTS device_events (
     KEY idx_device_events (device_id, created_at),
     FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS device_action_events (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    device_id INT UNSIGNED NOT NULL,
+    gpio_origem SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    gpio_destino SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    tipo TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    ocorrido_em DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_event (device_id, gpio_origem, gpio_destino, tipo, ocorrido_em),
+    KEY idx_device_time (device_id, ocorrido_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
