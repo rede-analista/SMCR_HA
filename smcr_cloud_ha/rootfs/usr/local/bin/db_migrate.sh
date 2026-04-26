@@ -19,6 +19,16 @@ ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_heartbeat_enabled TINYI
 ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_heartbeat_interval_min SMALLINT UNSIGNED DEFAULT 5;
 ALTER TABLE devices ADD COLUMN IF NOT EXISTS ativo TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Quando 0, não recebe sync e não é monitorado';
 ALTER TABLE device_config ADD COLUMN IF NOT EXISTS cloud_use_https TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE device_status ADD COLUMN IF NOT EXISTS sketch_size INT UNSIGNED DEFAULT 0;
+ALTER TABLE device_status ADD COLUMN IF NOT EXISTS sketch_free INT UNSIGNED DEFAULT 0;
+CREATE TABLE IF NOT EXISTS device_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    device_id INT NOT NULL,
+    event ENUM('online', 'offline') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_device_events (device_id, created_at),
+    FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
+);
 SQL
 
 echo "[SMCR] Migrations aplicadas."
