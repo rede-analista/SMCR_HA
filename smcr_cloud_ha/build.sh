@@ -5,16 +5,22 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${SCRIPT_DIR}/../SMCR_CLOUD"
 APP_DIR="${SCRIPT_DIR}/app"
 
-echo "==> Sincronizando código PHP de ${SOURCE_DIR} para ${APP_DIR}..."
-
-if [ ! -d "${SOURCE_DIR}" ]; then
-    echo "ERRO: Diretório fonte não encontrado: ${SOURCE_DIR}"
-    echo "Certifique-se que o projeto SMCR_CLOUD está em ../SMCR_CLOUD"
+# Localiza SMCR_CLOUD: primeiro ../SMCR_CLOUD (estrutura padrão do repo),
+# depois ~/OneDrive/Desenvolvimento/SMCR_CLOUD (estrutura local de dev)
+if [ -d "${SCRIPT_DIR}/../SMCR_CLOUD" ]; then
+    SOURCE_DIR="${SCRIPT_DIR}/../SMCR_CLOUD"
+elif [ -d "${HOME}/OneDrive/Desenvolvimento/SMCR_CLOUD" ]; then
+    SOURCE_DIR="${HOME}/OneDrive/Desenvolvimento/SMCR_CLOUD"
+else
+    echo "ERRO: Diretório SMCR_CLOUD não encontrado."
+    echo "  Tentado: ${SCRIPT_DIR}/../SMCR_CLOUD"
+    echo "  Tentado: ${HOME}/OneDrive/Desenvolvimento/SMCR_CLOUD"
     exit 1
 fi
+
+echo "==> Sincronizando código PHP de ${SOURCE_DIR} para ${APP_DIR}..."
 
 # Copia o projeto PHP (exceto arquivos desnecessários no container)
 rsync -av --delete \
