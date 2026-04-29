@@ -310,7 +310,7 @@ function triggerPin(device_id, pino, btn) {
     const orig = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-    fetch(BASE_PATH + '/api/trigger_device.php', {
+    fetch('<?= BASE ?>/api/trigger_device.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'device_id=' + device_id + '&pino=' + pino

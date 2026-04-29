@@ -100,6 +100,9 @@ CREATE TABLE IF NOT EXISTS device_config (
     cloud_sync_interval_min SMALLINT UNSIGNED DEFAULT 5,
     cloud_heartbeat_enabled TINYINT(1) DEFAULT 0,
     cloud_heartbeat_interval_min SMALLINT UNSIGNED DEFAULT 5,
+    cloud_use_https TINYINT(1) DEFAULT 0,
+    cloud_api_token VARCHAR(128) DEFAULT '',
+    cloud_register_token VARCHAR(128) DEFAULT '',
     reboot_on_sync TINYINT(1) DEFAULT 0,
     ota_update_on_sync TINYINT(1) DEFAULT 0,
     FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
@@ -135,6 +138,9 @@ CREATE TABLE IF NOT EXISTS device_actions (
     envia_modulo VARCHAR(64) DEFAULT '',
     telegram TINYINT(1) DEFAULT 0,
     assistente TINYINT(1) DEFAULT 0,
+    hora_agendada TINYINT UNSIGNED DEFAULT 255,
+    minuto_agendado TINYINT UNSIGNED DEFAULT 0,
+    duracao_agendada_s SMALLINT UNSIGNED DEFAULT 0,
     UNIQUE KEY uq_device_action (device_id, pino_origem, numero_acao),
     FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
 );
