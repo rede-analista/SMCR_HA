@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SMCR Cloud</title>
+    <title>Login - SMCR HA</title>
     <link rel="icon" href="<?= BASE ?>/data/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="brand-icon">
                 <i class="bi bi-cpu-fill"></i>
             </div>
-            <h4>SMCR Cloud</h4>
+            <h4>SMCR HA</h4>
             <p>Gerenciamento de dispositivos ESP32</p>
         </div>
         <div class="login-body">

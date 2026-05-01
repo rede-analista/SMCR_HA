@@ -23,14 +23,14 @@ if ($device_id > 0 && $device === null) {
     }
 }
 
-$page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
+$page_title = isset($page_title) ? $page_title : 'SMCR HA';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR" data-base="<?= BASE ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= h($page_title) ?> - SMCR Cloud</title>
+    <title><?= h($page_title) ?> - SMCR HA</title>
     <link rel="icon" href="<?= BASE ?>/data/favicon.ico" type="image/x-icon">
     <script>const BASE_PATH = <?= json_encode(BASE) ?>;</script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -313,7 +313,7 @@ $page_title = isset($page_title) ? $page_title : 'SMCR Cloud';
             <i class="bi bi-cpu-fill"></i>
         </div>
         <div>
-            <span class="brand-text">SMCR Cloud</span>
+            <span class="brand-text">SMCR HA</span>
             <span class="brand-sub">Gerenciamento ESP32</span>
         </div>
     </a>
