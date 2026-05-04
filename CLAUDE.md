@@ -35,9 +35,11 @@ db_migrate.sh no boot — se a migration não estiver lá, a coluna nunca é cri
 
 (As mesmas do SMCR_CLOUD — ver detalhes lá. Resumo dos pontos críticos:)
 
-### `api/get_config.php` — campos cloud omitidos
-`cloud_url`, `cloud_port`, `cloud_use_https` **não são retornados**.
-Retorná-los sobrescreveria os valores corretos do ESP e quebraria a conexão.
+### `api/get_config.php` — campos cloud via flag pending_cloud_migration
+`cloud_url`, `cloud_port`, `cloud_use_https` **omitidos por padrão**.
+Retorná-los com defaults do banco sobrescreveria os valores corretos do ESP.
+**Exceção:** quando `pending_cloud_migration=1` (usuário alterou via UI), os três campos são
+incluídos no get_config e a flag é resetada. Isso permite migração automática via sync.
 
 ### `api/register.php` — ativo=0 para novos devices
 Novo device → `ativo=0`. Dispositivo existente → preserva `ativo` atual.
