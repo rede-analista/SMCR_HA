@@ -185,6 +185,8 @@ try {
         'cloud_heartbeat_interval_min' => (int)($cfg['cloud_heartbeat_interval_min'] ?? 5),
         'reboot_on_sync'             => (bool)($cfg['reboot_on_sync'] ?? 0),
         'ota_update_on_sync'         => (bool)($cfg['ota_update_on_sync'] ?? 0),
+        'fetch_html_on_sync'         => (bool)($cfg['fetch_html_on_sync'] ?? 0),
+        'fetch_html_github'          => (int)($cfg['fetch_html_on_sync'] ?? 0) === 2,
 
         // Pinos, Ações e Inter-módulos
         'pins'             => $pins,
@@ -195,7 +197,7 @@ try {
     // cloud_url/port/https incluídos apenas quando o usuário alterou explicitamente via UI
     if (!empty($cfg['pending_cloud_migration'])) {
         $response['cloud_url']       = $cfg['cloud_url']       ?? '';
-        $response['cloud_port']      = (int)($cfg['cloud_port']      ?? 2082);
+        $response['cloud_port']      = (int)($cfg['cloud_port']      ?? 80);
         $response['cloud_use_https'] = (bool)($cfg['cloud_use_https'] ?? false);
     }
 
@@ -216,6 +218,10 @@ try {
     }
     if (!empty($cfg['ota_update_on_sync'])) {
         $db->prepare('UPDATE device_config SET ota_update_on_sync = 0 WHERE device_id = ?')
+           ->execute([$device_id]);
+    }
+    if (!empty($cfg['fetch_html_on_sync'])) {
+        $db->prepare('UPDATE device_config SET fetch_html_on_sync = 0 WHERE device_id = ?')
            ->execute([$device_id]);
     }
 

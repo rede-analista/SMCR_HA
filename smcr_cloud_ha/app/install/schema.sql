@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS device_config (
     telegram_chatid VARCHAR(64) DEFAULT '',
     telegram_interval SMALLINT UNSIGNED DEFAULT 30,
     cloud_url VARCHAR(128) DEFAULT 'smcr.pensenet.com.br',
-    cloud_port SMALLINT UNSIGNED DEFAULT 2082,
+    cloud_port SMALLINT UNSIGNED DEFAULT 443,
     cloud_sync_enabled TINYINT(1) DEFAULT 0,
     cloud_sync_interval_min SMALLINT UNSIGNED DEFAULT 5,
     cloud_heartbeat_enabled TINYINT(1) DEFAULT 0,
@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS device_config (
     cloud_register_token VARCHAR(128) DEFAULT '',
     reboot_on_sync TINYINT(1) DEFAULT 0,
     ota_update_on_sync TINYINT(1) DEFAULT 0,
+    fetch_html_on_sync TINYINT UNSIGNED DEFAULT 0,
     FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
 );
 
@@ -119,6 +120,7 @@ CREATE TABLE IF NOT EXISTS device_pins (
     modo TINYINT UNSIGNED DEFAULT 0,
     xor_logic TINYINT(1) DEFAULT 0,
     tempo_retencao INT UNSIGNED DEFAULT 0,
+    tempo_min_pulso_ms INT UNSIGNED DEFAULT 0,
     nivel_acionamento_min SMALLINT UNSIGNED DEFAULT 0,
     nivel_acionamento_max SMALLINT UNSIGNED DEFAULT 1,
     classe_mqtt VARCHAR(50) DEFAULT '',

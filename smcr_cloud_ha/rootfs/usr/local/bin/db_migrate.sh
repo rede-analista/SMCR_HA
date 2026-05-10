@@ -30,6 +30,7 @@ ALTER TABLE device_config ADD COLUMN IF NOT EXISTS wifi_offline_restart_min SMAL
 ALTER TABLE device_action_events ADD COLUMN IF NOT EXISTS valor_pino SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER tipo;
 ALTER TABLE device_config ADD COLUMN IF NOT EXISTS pending_cloud_migration TINYINT(1) NOT NULL DEFAULT 0;
 ALTER TABLE device_pins ADD COLUMN IF NOT EXISTS tempo_min_pulso_ms INT UNSIGNED DEFAULT 0;
+ALTER TABLE device_config ADD COLUMN IF NOT EXISTS fetch_html_on_sync TINYINT UNSIGNED DEFAULT 0;
 UPDATE device_config SET cloud_port = 2082 WHERE cloud_port = 8765;
 CREATE TABLE IF NOT EXISTS device_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
