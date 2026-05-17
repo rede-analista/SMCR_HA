@@ -54,57 +54,47 @@ try {
 
     set_time_limit(0);
 
-    // Abre stream para o GitHub — fopen retorna assim que os headers HTTP chegam (~1s),
-    // sem esperar o body inteiro. Isso permite enviar a resposta ao ESP imediatamente,
-    // mantendo a sessão NAT ativa enquanto os dados fluem continuamente.
     $binCtx = stream_context_create(['http' => [
-        'timeout' => 240,
-        'header'  => "User-Agent: SMCR-Cloud-Proxy\r\n",
+        'timeout'         => 60,
+        'header'          => "User-Agent: SMCR-Cloud-Proxy\r\n",
+        'follow_location' => 1,
     ]]);
-    $t0 = microtime(true);
+
     error_log('[SMCR OTA] Abrindo stream: ' . $binUrl);
     $stream = @fopen($binUrl, 'rb', false, $binCtx);
-    if (!$stream) {
-        error_log('[SMCR OTA] Falha ao abrir stream em ' . round(microtime(true) - $t0, 2) . 's');
-        send_error('Falha ao abrir firmware do GitHub', 502);
-    }
+    if (!$stream) send_error('Falha ao abrir stream do firmware no GitHub', 502);
 
+    // Obtém Content-Length do cabeçalho HTTP do GitHub
     $meta = stream_get_meta_data($stream);
     $contentLength = 0;
-    foreach (($meta['wrapper_data'] ?? []) as $hdr) {
-        if (stripos($hdr, 'Content-Length:') === 0) {
-            $contentLength = (int)trim(substr($hdr, 15));
+    foreach ($meta['wrapper_data'] ?? [] as $h) {
+        if (stripos($h, 'Content-Length:') === 0) {
+            $contentLength = (int) trim(substr($h, 15));
             break;
         }
     }
-    error_log('[SMCR OTA] Stream aberto, Content-Length=' . $contentLength . ' em ' . round(microtime(true) - $t0, 2) . 's');
 
-    if ($contentLength > 0 && $contentLength < 65536) {
-        fclose($stream);
-        send_error('Firmware muito pequeno ou inválido', 502);
-    }
-
-    while (ob_get_level() > 0) ob_end_flush();
-    ob_implicit_flush(true);
-
+    // Envia headers imediatamente — ESP começa a receber antes do download completo
+    while (ob_get_level() > 0) ob_end_clean();
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="SMCR_' . $version . '_firmware.bin"');
     header('X-Firmware-Version: ' . $tag);
-    if ($contentLength > 0) header('Content-Length: ' . $contentLength);
+    if ($contentLength > 0) {
+        header('Content-Length: ' . $contentLength);
+    }
     http_response_code(200);
-    flush();
 
-    $written = 0;
+    $t0 = microtime(true);
+    $totalSent = 0;
     while (!feof($stream)) {
-        $chunk = fread($stream, 8192);
-        if ($chunk !== false && strlen($chunk) > 0) {
-            echo $chunk;
-            flush();
-            $written += strlen($chunk);
-        }
+        $chunk = fread($stream, 4096);
+        if ($chunk === false || $chunk === '') break;
+        echo $chunk;
+        flush();
+        $totalSent += strlen($chunk);
     }
     fclose($stream);
-    error_log('[SMCR OTA] Stream concluído: ' . $written . ' bytes em ' . round(microtime(true) - $t0, 2) . 's');
+    error_log('[SMCR OTA] Streaming concluido: ' . $totalSent . ' bytes em ' . round(microtime(true) - $t0, 2) . 's');
 
 } catch (PDOException $e) {
     error_log('[SMCR API] DB error in get_firmware: ' . $e->getMessage());
