@@ -53,6 +53,7 @@ try {
              . "/firmware/v{$version}/SMCR_v{$version}_firmware.bin";
 
     set_time_limit(0);
+    ignore_user_abort(true);
 
     // Abre stream para o GitHub — fopen retorna assim que os headers HTTP chegam (~1s),
     // sem esperar o body inteiro. Isso permite enviar a resposta ao ESP imediatamente,
@@ -62,6 +63,19 @@ try {
         'header'  => "User-Agent: SMCR-Cloud-Proxy\r\n",
     ]]);
     $t0 = microtime(true);
+    $written = 0;
+
+    register_shutdown_function(function() use (&$written, $t0, $binUrl) {
+        $elapsed = round(microtime(true) - $t0, 2);
+        $aborted = connection_aborted() ? 'sim' : 'nao';
+        $err = error_get_last();
+        if ($err) {
+            error_log('[SMCR OTA] SHUTDOWN após ' . $elapsed . 's, ' . $written . ' bytes, abortado=' . $aborted . ', erro: ' . print_r($err, true));
+        } else {
+            error_log('[SMCR OTA] SHUTDOWN após ' . $elapsed . 's, ' . $written . ' bytes, abortado=' . $aborted);
+        }
+    });
+
     error_log('[SMCR OTA] Abrindo stream: ' . $binUrl);
     $stream = @fopen($binUrl, 'rb', false, $binCtx);
     if (!$stream) {
@@ -94,9 +108,12 @@ try {
     http_response_code(200);
     flush();
 
-    $written = 0;
     while (!feof($stream)) {
-        $chunk = fread($stream, 8192);
+        if (connection_aborted()) {
+            error_log('[SMCR OTA] ESP desconectou após ' . $written . ' bytes em ' . round(microtime(true) - $t0, 2) . 's');
+            break;
+        }
+        $chunk = fread($stream, 32768);
         if ($chunk !== false && strlen($chunk) > 0) {
             echo $chunk;
             flush();
