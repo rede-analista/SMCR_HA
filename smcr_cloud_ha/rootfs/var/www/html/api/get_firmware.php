@@ -58,7 +58,11 @@ try {
         'timeout' => 240,
         'header'  => "User-Agent: SMCR-Cloud-Proxy\r\n",
     ]]);
+    $t0 = microtime(true);
+    error_log('[SMCR OTA] Iniciando download: ' . $binUrl);
     $firmware = @file_get_contents($binUrl, false, $binCtx);
+    $elapsed = round(microtime(true) - $t0, 2);
+    error_log('[SMCR OTA] Download: ' . ($firmware ? strlen($firmware) . ' bytes em ' . $elapsed . 's' : 'FALHOU em ' . $elapsed . 's'));
     if (!$firmware || strlen($firmware) < 65536) send_error('Falha ao baixar firmware do GitHub', 502);
 
     while (ob_get_level() > 0) ob_end_flush();
