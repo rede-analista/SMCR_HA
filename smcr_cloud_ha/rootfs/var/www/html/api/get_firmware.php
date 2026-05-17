@@ -52,12 +52,17 @@ try {
     $binUrl  = "https://raw.githubusercontent.com/rede-analista/SMCR/{$tag}"
              . "/firmware/v{$version}/SMCR_v{$version}_firmware.bin";
 
+    set_time_limit(0);
+
     $binCtx  = stream_context_create(['http' => [
-        'timeout' => 120,
+        'timeout' => 240,
         'header'  => "User-Agent: SMCR-Cloud-Proxy\r\n",
     ]]);
     $firmware = @file_get_contents($binUrl, false, $binCtx);
     if (!$firmware || strlen($firmware) < 65536) send_error('Falha ao baixar firmware do GitHub', 502);
+
+    while (ob_get_level() > 0) ob_end_flush();
+    ob_implicit_flush(true);
 
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="SMCR_' . $version . '_firmware.bin"');
@@ -65,6 +70,7 @@ try {
     header('Content-Length: ' . strlen($firmware));
     http_response_code(200);
     echo $firmware;
+    flush();
 
 } catch (PDOException $e) {
     error_log('[SMCR API] DB error in get_firmware: ' . $e->getMessage());
